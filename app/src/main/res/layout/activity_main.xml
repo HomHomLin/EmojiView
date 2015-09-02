@@ -5,13 +5,14 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin">
 
-    <Button
-        android:id="@+id/btn_open_emoji"
+    <com.lhh.emoji.views.EmojiEditText
+        android:id="@+id/et_emoji"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <com.lhh.emoji.views.EmojiView
+        android:layout_alignParentBottom="true"
         android:id="@+id/emoji_view"
         android:layout_width="match_parent"
-        android:layout_height="400dp"/>
+        android:layout_height="230dp"/>
 
 </RelativeLayout>

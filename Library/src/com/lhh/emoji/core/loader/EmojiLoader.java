@@ -53,7 +53,7 @@ public class EmojiLoader {
 
     private EmojiProcessor mParserTask = null;
 
-    public static final  boolean isUseCache = false;
+    public static final  boolean isUseCache = true;
 
     private boolean mEmojiMode;
 
@@ -86,6 +86,8 @@ public class EmojiLoader {
 
     private static final String TAG = "EmojiManager";
 
+    private Context mContext;
+
     private EmojiLoader() {
     }
 
@@ -94,6 +96,18 @@ public class EmojiLoader {
      * @param callBack
      */
     public void setup(Context context, EmojiProcessor.EmojiTaskCallBack callBack){
+        mContext = context;
+        initImageLoader(context);
+        addEmoji(context, callBack);
+    }
+
+    public void setup(Context context){
+        mContext = context;
+        initImageLoader(context);
+        addEmoji(context, new EmojiManagerCallBack());
+    }
+
+    public void initImageLoader(Context context){
         ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(context);
         config.threadPriority(Thread.NORM_PRIORITY - 2);
         config.denyCacheImageMultipleSizesInMemory();
@@ -104,18 +118,25 @@ public class EmojiLoader {
 
         // Initialize ImageLoader with configuration.
         ImageLoader.getInstance().init(config.build());
-
-        addEmoji(context, callBack);
-    }
-
-    public void setup(Context context){
-        addEmoji(context, new EmojiManagerCallBack());
     }
 
     class EmojiManagerCallBack implements EmojiProcessor.EmojiTaskCallBack{
 
+        private EmojiProcessor.EmojiTaskCallBack mEmojiManagerCallBack;
+
+        public EmojiManagerCallBack(){
+
+        }
+
+        public EmojiManagerCallBack(EmojiProcessor.EmojiTaskCallBack extraCallBack){
+            this.mEmojiManagerCallBack = extraCallBack;
+        }
+
         @Override
         public void onStart() {
+            if(this.mEmojiManagerCallBack != null){
+                this.mEmojiManagerCallBack.onStart();
+            }
 
         }
 
@@ -133,6 +154,9 @@ public class EmojiLoader {
             mEmojiArray = list;
             mEmojiMap = map;
             mEmojiDrawableMap = drawableMap;
+            if(this.mEmojiManagerCallBack != null){
+                this.mEmojiManagerCallBack.onFinish(map,list,drawableMap);
+            }
         }
 
     }
@@ -175,7 +199,7 @@ public class EmojiLoader {
         mEmojiMap = new HashMap<String, String>();
         mEmojiDrawableMap = new HashMap<>();
         mEmojiArray = new ArrayList<>();
-        mParserTask = new EmojiProcessor(context, callBack);
+        mParserTask = new EmojiProcessor(context, new EmojiManagerCallBack(callBack));
         new Thread(mParserTask).start();
     }
 
