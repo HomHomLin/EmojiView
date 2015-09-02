@@ -2,6 +2,8 @@ package com.lhh.emoji.core.processor;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.util.SparseArray;
 
@@ -38,20 +40,38 @@ public class EmojiProcessor implements Runnable{
 
     private Context mContext;
 
+    private static final int ON_FINISH = 1;
+    private static final int ON_START = 2;
+
+
     public interface EmojiTaskCallBack{
         public void onStart();
         public void onFinish(Map<String, String> map, List<List<EmojiObject>> list, Map<String, Drawable> drawableMap);
     }
 
+    Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            int what = msg.what;
+            if(what == ON_START){
+                mCallBack.onStart();
+            }else if(what == ON_FINISH){
+                mCallBack.onFinish(mEmojiAllMap,mEmojiAllArray,mEmojiDrawableMap);
+            }
+        }
+    };
+
     @Override
     public void run() {
 
-        mCallBack.onStart();
+        mHandler.sendMessage(Message.obtain(mHandler,ON_START));
+//        mCallBack.onStart();
 
         SparseArray<String> xmlArray = EmojiLoader
                 .getAllEmojiJsons(EmojiLoader.EMOJI_PATH);
         if (xmlArray == null || xmlArray.size() <= 0) {
-            mCallBack.onFinish(mEmojiAllMap,mEmojiAllArray,mEmojiDrawableMap);
+            mHandler.sendMessage(Message.obtain(mHandler,ON_FINISH));
+//            mCallBack.onFinish(mEmojiAllMap,mEmojiAllArray,mEmojiDrawableMap);
             return;
         }
         for (int i = 0; i < xmlArray.size(); i++) {
@@ -62,19 +82,22 @@ public class EmojiProcessor implements Runnable{
                 if (mEmojiAllArray != null) {
                     mEmojiAllArray.add(handler.getEmojiList());
                 } else {
-                    mCallBack.onFinish(mEmojiAllMap,mEmojiAllArray,mEmojiDrawableMap);
+                    mHandler.sendMessage(Message.obtain(mHandler,ON_FINISH));
+//                    mCallBack.onFinish(mEmojiAllMap,mEmojiAllArray,mEmojiDrawableMap);
                     return;
                 }
                 if (mEmojiAllMap != null) {
                     mEmojiAllMap.putAll(handler.getEmojiMap());
                 } else {
-                    mCallBack.onFinish(mEmojiAllMap,mEmojiAllArray,mEmojiDrawableMap);
+                    mHandler.sendMessage(Message.obtain(mHandler,ON_FINISH));
+//                    mCallBack.onFinish(mEmojiAllMap,mEmojiAllArray,mEmojiDrawableMap);
                     return;
                 }
                 if (mEmojiDrawableMap != null) {
                     mEmojiDrawableMap.putAll(handler.getEmojiDrawableMap());
                 } else {
-                    mCallBack.onFinish(mEmojiAllMap,mEmojiAllArray,mEmojiDrawableMap);
+                    mHandler.sendMessage(Message.obtain(mHandler,ON_FINISH));
+//                    mCallBack.onFinish(mEmojiAllMap,mEmojiAllArray,mEmojiDrawableMap);
                     return;
                 }
 
@@ -110,7 +133,8 @@ public class EmojiProcessor implements Runnable{
                 Log.d(TAG, "parse json file error,path = " + path);
             }
         }
-        mCallBack.onFinish(mEmojiAllMap,mEmojiAllArray,mEmojiDrawableMap);
+        mHandler.sendMessage(Message.obtain(mHandler,ON_FINISH));
+//        mCallBack.onFinish(mEmojiAllMap,mEmojiAllArray,mEmojiDrawableMap);
     }
 
     public EmojiProcessor(Context context , EmojiTaskCallBack callBack) {

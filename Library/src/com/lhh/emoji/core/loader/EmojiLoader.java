@@ -16,7 +16,10 @@ import android.widget.EditText;
 import com.lhh.emoji.beans.EmojiObject;
 import com.lhh.emoji.core.processor.EmojiProcessor;
 import com.lhh.emoji.util.EmojiUtils;
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -68,7 +71,6 @@ public class EmojiLoader {
     public EmojiObject mBackspaceEmojiObject;
 
     public static final String EXT_SDCARD_PATH = Environment.getExternalStorageDirectory().getAbsolutePath();
-    public static final String APP_KASCEND_PATH = EXT_SDCARD_PATH + "/kascend";
     public static final String APP_DATA_PATH = EXT_SDCARD_PATH + "/emojiview/";
 
     // 表情包顶级目录名称
@@ -92,6 +94,17 @@ public class EmojiLoader {
      * @param callBack
      */
     public void setup(Context context, EmojiProcessor.EmojiTaskCallBack callBack){
+        ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(context);
+        config.threadPriority(Thread.NORM_PRIORITY - 2);
+        config.denyCacheImageMultipleSizesInMemory();
+        config.diskCacheFileNameGenerator(new Md5FileNameGenerator());
+        config.diskCacheSize(50 * 1024 * 1024); // 50 MiB
+        config.tasksProcessingOrder(QueueProcessingType.LIFO);
+        config.writeDebugLogs(); // Remove for release app
+
+        // Initialize ImageLoader with configuration.
+        ImageLoader.getInstance().init(config.build());
+
         addEmoji(context, callBack);
     }
 

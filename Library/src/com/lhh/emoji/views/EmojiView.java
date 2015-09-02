@@ -41,13 +41,15 @@ public class EmojiView extends RelativeLayout{
 
     public EmojiView(Context context) {
         super(context);
+        initView(context);
     }
 
     public EmojiView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        initView(context);
     }
 
-    private void initView(Context context){
+    public void initView(Context context){
         mContext = context;
         mView = inflate(context, R.layout.emoji_full_view, this);
         mViewPager = (FineViewPager) mView.findViewById(R.id.fine_view_pager);
