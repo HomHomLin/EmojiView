@@ -29,7 +29,7 @@ public class EmojiView extends RelativeLayout{
 
     LinearLayout mEmojiRadio;
 
-    private ExpressionPagerAdapter mAdapter;
+    private EmojiPagerAdapter mAdapter;
 
     public Context mContext;
 
@@ -57,7 +57,7 @@ public class EmojiView extends RelativeLayout{
     public void init(List<List<EmojiObject>> dataList){
         mDataList = dataList;
         if(mAdapter == null) {
-            mAdapter = new ExpressionPagerAdapter();
+            mAdapter = new EmojiPagerAdapter();
         }
         if(dataList != null && dataList.size() > 0) {
             initRadio();
@@ -121,7 +121,7 @@ public class EmojiView extends RelativeLayout{
 
     }
 
-    public class ExpressionPagerAdapter extends PagerAdapter {
+    public class EmojiPagerAdapter extends PagerAdapter {
         public ArrayList<EmojiPager> mList;
 
         @Override

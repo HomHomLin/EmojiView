@@ -22,11 +22,11 @@ import java.util.List;
 */
 public class EmojiHandler implements BaseHandler {
 
-    private List<EmojiObject> mExpressionList = null;
+    private List<EmojiObject> mEmojiList = null;
 
-    private HashMap<String, String> mExpressionMap = null;
+    private HashMap<String, String> mEmojiMap = null;
 
-    private HashMap<String, Drawable> mExpressionDrawableMap = null;
+    private HashMap<String, Drawable> mEmojiDrawableMap = null;
 
     private Context mContext = null;
 
@@ -35,21 +35,21 @@ public class EmojiHandler implements BaseHandler {
     public EmojiHandler(Context context, String path) {
         this.mPath = path;
         this.mContext = context;
-        mExpressionList = new ArrayList<EmojiObject>();
-        mExpressionMap = new HashMap<String, String>();
-        mExpressionDrawableMap = new HashMap<>();
+        mEmojiList = new ArrayList<EmojiObject>();
+        mEmojiMap = new HashMap<String, String>();
+        mEmojiDrawableMap = new HashMap<>();
     }
 
-    public List<EmojiObject> getExpressionList() {
-        return this.mExpressionList;
+    public List<EmojiObject> getEmojiList() {
+        return this.mEmojiList;
     }
 
-    public HashMap<String,Drawable> getExpressionDrawableMap(){
-        return this.mExpressionDrawableMap;
+    public HashMap<String,Drawable> getEmojiDrawableMap(){
+        return this.mEmojiDrawableMap;
     }
 
-    public HashMap<String,String > getExpressionMap(){
-        return this.mExpressionMap;
+    public HashMap<String,String > getEmojiMap(){
+        return this.mEmojiMap;
     }
 
     @Override
@@ -70,13 +70,13 @@ public class EmojiHandler implements BaseHandler {
                     emojiObject.setPath( mPath + File.separator + jo.getString(EmojiLoader.JSON_VALUE));
                 }
                 //todo:这里有可能产生重复的内容，可能需要调整
-                mExpressionList.add(emojiObject);
+                mEmojiList.add(emojiObject);
                 //将对象放入map中，用于edittext的判断
-                mExpressionMap.put(emojiObject.getKey(), emojiObject.getPath());
+                mEmojiMap.put(emojiObject.getKey(), emojiObject.getPath());
                 if(EmojiLoader.instance().isUseCache) {
                     //解析图片,用于缓存
                     Bitmap bitmap = ImageLoader.getInstance().loadImageSync("file://" + emojiObject.getPath());
-                    mExpressionDrawableMap.put(emojiObject.getKey(),
+                    mEmojiDrawableMap.put(emojiObject.getKey(),
                             new BitmapDrawable(mContext.getResources(), bitmap));
                 }
 //                if(!ExpressionManager.instance().mExpressionDrawableMap.containsKey(expressionObject.getKey())){

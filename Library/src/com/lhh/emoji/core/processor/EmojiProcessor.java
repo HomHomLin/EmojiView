@@ -26,19 +26,19 @@ import java.util.zip.ZipException;
  */
 public class EmojiProcessor implements Runnable{
 
-    private static final String TAG = "ExpressionTask";
+    private static final String TAG = "EmojiProcessor";
 
-    private Map<String, String> mExpressionAllMap = null;
+    private Map<String, String> mEmojiAllMap = null;
 
-    private Map<String, Drawable> mExpressionDrawableMap = null;
+    private Map<String, Drawable> mEmojiDrawableMap = null;
 
-    private List<List<EmojiObject>> mExpressionAllArray = null;
+    private List<List<EmojiObject>> mEmojiAllArray = null;
 
-    private ExpressionTaskCallBack mCallBack;
+    private EmojiTaskCallBack mCallBack;
 
     private Context mContext;
 
-    public interface ExpressionTaskCallBack{
+    public interface EmojiTaskCallBack{
         public void onStart();
         public void onFinish(Map<String, String> map, List<List<EmojiObject>> list, Map<String, Drawable> drawableMap);
     }
@@ -49,9 +49,9 @@ public class EmojiProcessor implements Runnable{
         mCallBack.onStart();
 
         SparseArray<String> xmlArray = EmojiLoader
-                .getAllExpressionJsons(EmojiLoader.EMOJI_PATH);
+                .getAllEmojiJsons(EmojiLoader.EMOJI_PATH);
         if (xmlArray == null || xmlArray.size() <= 0) {
-            mCallBack.onFinish(mExpressionAllMap,mExpressionAllArray,mExpressionDrawableMap);
+            mCallBack.onFinish(mEmojiAllMap,mEmojiAllArray,mEmojiDrawableMap);
             return;
         }
         for (int i = 0; i < xmlArray.size(); i++) {
@@ -59,29 +59,29 @@ public class EmojiProcessor implements Runnable{
             String path = xmlArray.get(key);
             EmojiHandler handler = parse(path);
             if (handler != null) {
-                if (mExpressionAllArray != null) {
-                    mExpressionAllArray.add(handler.getExpressionList());
+                if (mEmojiAllArray != null) {
+                    mEmojiAllArray.add(handler.getEmojiList());
                 } else {
-                    mCallBack.onFinish(mExpressionAllMap,mExpressionAllArray,mExpressionDrawableMap);
+                    mCallBack.onFinish(mEmojiAllMap,mEmojiAllArray,mEmojiDrawableMap);
                     return;
                 }
-                if (mExpressionAllMap != null) {
-                    mExpressionAllMap.putAll(handler.getExpressionMap());
+                if (mEmojiAllMap != null) {
+                    mEmojiAllMap.putAll(handler.getEmojiMap());
                 } else {
-                    mCallBack.onFinish(mExpressionAllMap,mExpressionAllArray,mExpressionDrawableMap);
+                    mCallBack.onFinish(mEmojiAllMap,mEmojiAllArray,mEmojiDrawableMap);
                     return;
                 }
-                if (mExpressionDrawableMap != null) {
-                    mExpressionDrawableMap.putAll(handler.getExpressionDrawableMap());
+                if (mEmojiDrawableMap != null) {
+                    mEmojiDrawableMap.putAll(handler.getEmojiDrawableMap());
                 } else {
-                    mCallBack.onFinish(mExpressionAllMap,mExpressionAllArray,mExpressionDrawableMap);
+                    mCallBack.onFinish(mEmojiAllMap,mEmojiAllArray,mEmojiDrawableMap);
                     return;
                 }
 
                 //简单校验文件数目与json文件提供的数量是否一致，如果不一致重新解压此包
-                if (null != mExpressionAllArray && mExpressionAllArray.size() > 0 &&
+                if (null != mEmojiAllArray && mEmojiAllArray.size() > 0 &&
                         !checkEmojiFile(EmojiLoader.EMOJI_PATH + File.separator
-                                + key, mExpressionAllArray.size())) {
+                                + key, mEmojiAllArray.size())) {
                     try {
                         File zipFile = null;
                         if (key == 1) {
@@ -110,14 +110,14 @@ public class EmojiProcessor implements Runnable{
                 Log.d(TAG, "parse json file error,path = " + path);
             }
         }
-        mCallBack.onFinish(mExpressionAllMap,mExpressionAllArray,mExpressionDrawableMap);
+        mCallBack.onFinish(mEmojiAllMap,mEmojiAllArray,mEmojiDrawableMap);
     }
 
-    public EmojiProcessor(Context context , ExpressionTaskCallBack callBack) {
+    public EmojiProcessor(Context context , EmojiTaskCallBack callBack) {
         mContext = context;
-        mExpressionAllMap = new HashMap<>();
-        mExpressionAllArray = new ArrayList<>();
-        mExpressionDrawableMap = new HashMap<>();
+        mEmojiAllMap = new HashMap<>();
+        mEmojiAllArray = new ArrayList<>();
+        mEmojiDrawableMap = new HashMap<>();
         mCallBack = callBack;
     }
 

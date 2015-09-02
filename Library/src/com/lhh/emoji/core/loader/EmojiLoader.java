@@ -27,6 +27,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * 總啟動器
 * Created by linhonghong on 2015/8/18.
 */
 public class EmojiLoader {
@@ -41,24 +42,24 @@ public class EmojiLoader {
 
     private static EmojiLoader mInstance = null;
 
-    private Map<String, String> mExpressionMap = null;
+    private Map<String, String> mEmojiMap = null;
 
-    private List<List<EmojiObject>> mExpressionArray = null;
+    private List<List<EmojiObject>> mEmojiArray = null;
 
-    public Map<String ,Drawable> mExpressionDrawableMap;
+    public Map<String ,Drawable> mEmojiDrawableMap;
 
     private EmojiProcessor mParserTask = null;
 
     public static final  boolean isUseCache = false;
 
-    private boolean mExpressionMode;
+    private boolean mEmojiMode;
 
     public static final int ANIMATE_DURATION = 350;
 
     private static final String MATCHER = "\\[\\w*\\]";
 
     // 每个表情包都含有emoji.xml的文件索引
-    private static final String EXPRESSION_JSON_NAME = "expression.json";
+    private static final String EMOJI_JSON_NAME = "emoji.json";
 
     // 回退标识
     public static final String BACKSPACE = "backspace";
@@ -90,15 +91,15 @@ public class EmojiLoader {
      * 读取表情
      * @param callBack
      */
-    public void setup(Context context, EmojiProcessor.ExpressionTaskCallBack callBack){
-        addExpressions(context, callBack);
+    public void setup(Context context, EmojiProcessor.EmojiTaskCallBack callBack){
+        addEmoji(context, callBack);
     }
 
     public void setup(Context context){
-        addExpressions(context, new ExpressionManagerCallBack());
+        addEmoji(context, new EmojiManagerCallBack());
     }
 
-    class ExpressionManagerCallBack implements EmojiProcessor.ExpressionTaskCallBack{
+    class EmojiManagerCallBack implements EmojiProcessor.EmojiTaskCallBack{
 
         @Override
         public void onStart() {
@@ -107,18 +108,18 @@ public class EmojiLoader {
 
         @Override
         public void onFinish(Map<String, String> map, List<List<EmojiObject>> list, Map<String, Drawable> drawableMap) {
-            if (mExpressionArray != null) {
-                mExpressionArray.clear();
+            if (mEmojiArray != null) {
+                mEmojiArray.clear();
             }
-            if (mExpressionMap != null) {
-                mExpressionMap.clear();
+            if (mEmojiMap != null) {
+                mEmojiMap.clear();
             }
-            if(mExpressionDrawableMap != null){
-                mExpressionDrawableMap.clear();
+            if(mEmojiDrawableMap != null){
+                mEmojiDrawableMap.clear();
             }
-            mExpressionArray = list;
-            mExpressionMap = map;
-            mExpressionDrawableMap = drawableMap;
+            mEmojiArray = list;
+            mEmojiMap = map;
+            mEmojiDrawableMap = drawableMap;
         }
 
     }
@@ -134,7 +135,7 @@ public class EmojiLoader {
         return mInstance;
     }
 
-    public EmojiObject getBackspaceExpressionObject(){
+    public EmojiObject getBackspaceEmojiObject(){
         if(mBackspaceEmojiObject == null){
             mBackspaceEmojiObject = new EmojiObject();
             mBackspaceEmojiObject.setKey(EmojiLoader.JSON_BACKSPACE);
@@ -144,23 +145,23 @@ public class EmojiLoader {
         return this.mBackspaceEmojiObject;
     }
 
-    private void addExpressions(Context context, EmojiProcessor.ExpressionTaskCallBack callBack) {
-        if (mExpressionArray != null) {
-            mExpressionArray.clear();
-            mExpressionArray = null;
+    private void addEmoji(Context context, EmojiProcessor.EmojiTaskCallBack callBack) {
+        if (mEmojiArray != null) {
+            mEmojiArray.clear();
+            mEmojiArray = null;
         }
-        if (mExpressionMap != null) {
-            mExpressionMap.clear();
-            mExpressionMap = null;
+        if (mEmojiMap != null) {
+            mEmojiMap.clear();
+            mEmojiMap = null;
         }
-        if (mExpressionDrawableMap != null) {
-            mExpressionDrawableMap.clear();
-            mExpressionDrawableMap = null;
+        if (mEmojiDrawableMap != null) {
+            mEmojiDrawableMap.clear();
+            mEmojiDrawableMap = null;
         }
 
-        mExpressionMap = new HashMap<String, String>();
-        mExpressionDrawableMap = new HashMap<>();
-        mExpressionArray = new ArrayList<>();
+        mEmojiMap = new HashMap<String, String>();
+        mEmojiDrawableMap = new HashMap<>();
+        mEmojiArray = new ArrayList<>();
         mParserTask = new EmojiProcessor(context, callBack);
         new Thread(mParserTask).start();
     }
@@ -188,24 +189,24 @@ public class EmojiLoader {
      * 获得加载好的map
      * @return
      */
-    public Map<String, String> getExpressionsMap() {
-        return this.mExpressionMap;
+    public Map<String, String> getEmojiMap() {
+        return this.mEmojiMap;
     }
 
     /**
      * 获得所有的表情包
      * @return
      */
-    public List<List<EmojiObject>> getExpressionArray() {
-        return mExpressionArray;
+    public List<List<EmojiObject>> getEmojiArray() {
+        return mEmojiArray;
     }
 
     /**
      * 获得缓存
      * @return
      */
-    public Map<String ,Drawable> getExpressionDrawableMap() {
-        return mExpressionDrawableMap;
+    public Map<String ,Drawable> getEmojiDrawableMap() {
+        return mEmojiDrawableMap;
     }
 
 
@@ -285,14 +286,14 @@ public class EmojiLoader {
         Matcher matcher = Pattern.compile(MATCHER).matcher(spannable);
         while (matcher.find()) {
             Drawable drawable = null;
-            if (isUseCache && mExpressionDrawableMap != null && mExpressionDrawableMap.containsKey(matcher.group())) {
+            if (isUseCache && mEmojiDrawableMap != null && mEmojiDrawableMap.containsKey(matcher.group())) {
                 //如果使用缓存，使用缓存
-                drawable = mExpressionDrawableMap.get(matcher.group());
+                drawable = mEmojiDrawableMap.get(matcher.group());
             }else{
-                if(mExpressionMap.containsKey(matcher.group())){
+                if(mEmojiMap.containsKey(matcher.group())){
                     //如果没有缓存则判断是否有预读到这个表情信息
                     drawable = getDrawable(context,matcher.group(),
-                            mExpressionMap.get(matcher.group()), textSize);
+                            mEmojiMap.get(matcher.group()), textSize);
                 }
             }
             if (drawable != null) {
@@ -325,8 +326,8 @@ public class EmojiLoader {
 //        Bitmap bmp = BitmapFactory.decodeFile(path);
         if (bmp != null) {
             drawable = new BitmapDrawable(context.getResources(), bmp);
-            if(isUseCache && !mExpressionDrawableMap.containsKey(key)){
-                mExpressionDrawableMap.put(key,drawable);//保存缓存下
+            if(isUseCache && !mEmojiDrawableMap.containsKey(key)){
+                mEmojiDrawableMap.put(key,drawable);//保存缓存下
             }
         } else {
             Log.e(TAG, "bitmap == null, path = " + path);
@@ -411,7 +412,7 @@ public class EmojiLoader {
      *
      * @return
      */
-    public static SparseArray<String> getAllExpressionJsons(String path) {
+    public static SparseArray<String> getAllEmojiJsons(String path) {
         SparseArray<String> jsonArray = null;
         File dir = new File(path);
         if (dir != null && dir.isDirectory()) {
@@ -425,7 +426,7 @@ public class EmojiLoader {
                     File[] childFiles = fp.listFiles();
                     for (File fc : childFiles) {
                         if (fc != null && fc.exists()) {
-                            if (fc.getName().equals(EXPRESSION_JSON_NAME)) {
+                            if (fc.getName().equals(EMOJI_JSON_NAME)) {
                                 jsonArray.put(EmojiUtils.parseInt(fp.getName()),
                                         path + File.separator + fp.getName()
                                                 + File.separator + fc.getName());
@@ -472,13 +473,13 @@ public class EmojiLoader {
      */
     public void release() {
 
-        if (mExpressionMap != null) {
-            mExpressionMap.clear();
-            mExpressionMap = null;
+        if (mEmojiMap != null) {
+            mEmojiMap.clear();
+            mEmojiMap = null;
         }
-        if (mExpressionArray != null) {
-            mExpressionArray.clear();
-            mExpressionArray = null;
+        if (mEmojiArray != null) {
+            mEmojiArray.clear();
+            mEmojiArray = null;
         }
         mParserTask = null;
         mInstance = null;

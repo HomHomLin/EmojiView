@@ -30,7 +30,7 @@ public class EmojiPager extends RelativeLayout{
 
     private Context mContext;
 
-    private ExpressionGvAdapter mAdapter;
+    private EmojiGvAdapter mAdapter;
 
     private View mRootView;
 
@@ -55,7 +55,7 @@ public class EmojiPager extends RelativeLayout{
     public void init(List<EmojiObject> list,EditText editText){
         mExtraData = list;
 
-        EmojiObject emojiObject = EmojiLoader.instance().getBackspaceExpressionObject();
+        EmojiObject emojiObject = EmojiLoader.instance().getBackspaceEmojiObject();
 
         if(mExtraData != null && !mExtraData.contains(emojiObject)) {
             //最后一个是删除
@@ -65,7 +65,7 @@ public class EmojiPager extends RelativeLayout{
 
         mEditText = editText;
         if(mAdapter == null) {
-            mAdapter = new ExpressionGvAdapter(mContext);
+            mAdapter = new EmojiGvAdapter(mContext);
             mGridView.setAdapter(mAdapter);
         }
         setGridViewListener();
@@ -91,11 +91,11 @@ public class EmojiPager extends RelativeLayout{
         });
     }
 
-    public class ExpressionGvAdapter extends BaseAdapter{
+    public class EmojiGvAdapter extends BaseAdapter{
         protected LayoutInflater mInflater;
         public Context mContext;
 
-        public ExpressionGvAdapter(Context context){
+        public EmojiGvAdapter(Context context){
             mContext = context;
             mInflater = LayoutInflater.from(context);
         }
@@ -123,12 +123,12 @@ public class EmojiPager extends RelativeLayout{
             EmojiImageView iv = ViewHolder.get(view, R.id.emoji_image_view);
             if(iv != null){
                 if(!mExtraData.get(i).getPath().equals(EmojiLoader.BACKSPACE)) {
-                    if(EmojiLoader.instance().isUseCache && EmojiLoader.instance().mExpressionDrawableMap == null) {
-                        EmojiLoader.instance().mExpressionDrawableMap = new HashMap<>();
+                    if(EmojiLoader.instance().isUseCache && EmojiLoader.instance().mEmojiDrawableMap == null) {
+                        EmojiLoader.instance().mEmojiDrawableMap = new HashMap<>();
                     }
-                    if(EmojiLoader.instance().isUseCache && EmojiLoader.instance().mExpressionDrawableMap.containsKey(mExtraData.get(i).getKey())){
+                    if(EmojiLoader.instance().isUseCache && EmojiLoader.instance().mEmojiDrawableMap.containsKey(mExtraData.get(i).getKey())){
                         //如果存在这个缓存
-                        iv.setImageDrawable(EmojiLoader.instance().getExpressionDrawableMap().get(mExtraData.get(i).getKey()));
+                        iv.setImageDrawable(EmojiLoader.instance().getEmojiDrawableMap().get(mExtraData.get(i).getKey()));
                     }else{
                         //没有缓存需要自己加载
                         iv.loadLocalImageNoshowImageOnLoading(mExtraData.get(i).getPath(), 0,
