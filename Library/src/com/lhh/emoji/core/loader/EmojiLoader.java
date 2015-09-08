@@ -57,7 +57,6 @@ public class EmojiLoader {
 
     private boolean mEmojiMode;
 
-    public static final int ANIMATE_DURATION = 350;
 
     private static final String MATCHER = "\\[\\w*\\]";
 
@@ -442,7 +441,7 @@ public class EmojiLoader {
 //    }
 
     /**
-     * 取得当前目录下的所有expression.xml文件
+     * 取得当前目录下的所有emoji.json文件
      *
      * @param path
      *            当前目录的名称

@@ -21,13 +21,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Emoji面板
 * Created by linhonghong on 2015/8/11.
 */
 public class EmojiView extends RelativeLayout{
 
-    FineViewPager mViewPager;
+    public FineViewPager mViewPager;
 
-    LinearLayout mEmojiRadio;
+    public LinearLayout mEmojiRadio;
 
     private EmojiPagerAdapter mAdapter;
 

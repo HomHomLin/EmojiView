@@ -29,9 +29,14 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         mEmojiView = (EmojiView)findViewById(R.id.emoji_view);
         mEtEmoji = (EmojiEditText)findViewById(R.id.et_emoji);
+
+        //设置被绑定的edittext
         mEmojiView.setEditText(mEtEmoji);
+
+        //启动EmojiLoader
         EmojiLoader.instance().setup(MainActivity.this,new EmojiProcessor.EmojiTaskCallBack() {
             @Override
             public void onStart() {
@@ -43,43 +48,7 @@ public class MainActivity extends Activity {
                 mEmojiView.init(list);
             }
         });
-//
-//        mBtnOpenEmoji = (Button)findViewById(R.id.btn_open_emoji);
-//        mBtnOpenEmoji.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//
-//            }
-//        });
-    }
 
-    //    final private TextWatcher mTextWatcher = new TextWatcher() {
-//        private CharSequence temp;
-//
-//        @Override
-//        public void beforeTextChanged(CharSequence s, int arg1, int arg2, int arg3) {
-//            temp = s;
-//        }
-//
-//        @Override
-//        public void onTextChanged(CharSequence s, int arg1, int arg2, int arg3) {
-//        }
-//
-//        @Override
-//        public void afterTextChanged(Editable s) {
-////            ExpressionEditText etView = metComment;
-//
-//            if (EmojiManager.instance().calculateTextCount(temp) > MAX_INPUT_COUNT) {
-//                String str = String.format(mContext.getString(R.string.STR_MAX_INPUT), MAX_INPUT_COUNT);
-//                Toast.makeText(mContext, str, Toast.LENGTH_SHORT).show();
-//
-//                EmojiManager.backspace(metComment);
-//
-//                metComment.setTextKeepState(s);
-//            }
-//
-//        }
-//    };
+    }
 
 }
