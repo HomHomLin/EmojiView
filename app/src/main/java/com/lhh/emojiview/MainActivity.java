@@ -45,7 +45,7 @@ public class MainActivity extends Activity {
 
             @Override
             public void onFinish(Map<String, String> map, List<List<EmojiObject>> list, Map<String, Drawable> drawableMap) {
-                mEmojiView.init(list);
+                mEmojiView.init(list);//改为setadapter这种形式
             }
         });
 

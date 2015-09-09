@@ -69,6 +69,10 @@ public class EmojiView extends RelativeLayout{
 
     }
 
+    public void setAdapter(){
+
+    }
+
     public void setEditText(EditText editText){
         mEditText = editText;
     }
