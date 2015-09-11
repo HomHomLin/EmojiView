@@ -14,5 +14,7 @@ todo:图片读取功能
 xml读取方式
 性能优化和逻辑优化
 流程图绘制
+改为adapter方式
+
 
 ![p1](http://ww2.sinaimg.cn/bmiddle/6e4e0c91gw1evo914r2r6j20k00zk773.jpg)![p2](http://ww1.sinaimg.cn/bmiddle/6e4e0c91gw1evo915l4zaj20k00zk0vm.jpg)![p3](http://ww3.sinaimg.cn/bmiddle/6e4e0c91gw1evo916ajhqj20k00zktbp.jpg)
