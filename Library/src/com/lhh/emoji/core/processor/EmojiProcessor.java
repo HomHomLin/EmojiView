@@ -4,10 +4,12 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
 
 import com.lhh.emoji.beans.EmojiObject;
+import com.lhh.emoji.core.config.EmojiLoaderConfiguration;
 import com.lhh.emoji.core.handler.EmojiHandler;
 import com.lhh.emoji.core.loader.EmojiLoader;
 import com.lhh.emoji.util.FileUtils;
@@ -68,7 +70,7 @@ public class EmojiProcessor implements Runnable{
 //        mCallBack.onStart();
 
         SparseArray<String> xmlArray = EmojiLoader
-                .getAllEmojiJsons(EmojiLoader.EMOJI_PATH);
+                .getAllEmojiJsons(EmojiLoader.instance().getBuilder().getEmojiPath());
         if (xmlArray == null || xmlArray.size() <= 0) {
             mHandler.sendMessage(Message.obtain(mHandler,ON_FINISH));
 //            mCallBack.onFinish(mEmojiAllMap,mEmojiAllArray,mEmojiDrawableMap);
@@ -103,22 +105,22 @@ public class EmojiProcessor implements Runnable{
 
                 //简单校验文件数目与json文件提供的数量是否一致，如果不一致重新解压此包
                 if (null != mEmojiAllArray && mEmojiAllArray.size() > 0 &&
-                        !checkEmojiFile(EmojiLoader.EMOJI_PATH + File.separator
+                        !checkEmojiFile(EmojiLoader.instance().getBuilder().getEmojiPath() + File.separator
                                 + key, mEmojiAllArray.size())) {
                     try {
                         File zipFile = null;
                         if (key == 1) {
-                            zipFile = new File(EmojiLoader.EMOJI_PATH
+                            zipFile = new File(EmojiLoader.instance().getBuilder().getEmojiPath()
                                     + File.separator
                                     + EmojiLoader.BASE_EMOJI_ZIP_NAME);
                         } else if (key == 2) {
-                            zipFile = new File(EmojiLoader.EMOJI_PATH
+                            zipFile = new File(EmojiLoader.instance().getBuilder().getEmojiPath()
                                     + File.separator
                                     + EmojiLoader.BASE_EMOJI_ZIP_NAME_2);
                         }
                         if (zipFile != null && zipFile.exists()) {
                             FileUtils.upZipFile(zipFile,
-                                    EmojiLoader.EMOJI_PATH + File.separator
+                                    EmojiLoader.instance().getBuilder().getEmojiPath() + File.separator
                                             + key);
                         }
                     } catch (ZipException e) {

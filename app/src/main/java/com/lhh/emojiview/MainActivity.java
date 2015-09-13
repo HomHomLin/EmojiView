@@ -2,7 +2,6 @@ package com.lhh.emojiview;
 
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.lhh.emoji.beans.EmojiObject;
+import com.lhh.emoji.core.config.EmojiLoaderConfiguration;
 import com.lhh.emoji.core.loader.EmojiLoader;
 import com.lhh.emoji.core.processor.EmojiProcessor;
 import com.lhh.emoji.views.EmojiEditText;
@@ -36,6 +36,8 @@ public class MainActivity extends Activity {
         //设置被绑定的edittext
         mEmojiView.setEditText(mEtEmoji);
 
+        EmojiLoader.instance().init(EmojiLoaderConfiguration.createDefault());//不写这句配置，程序会崩溃出错，我们就不做额外的null判断了，反正判断也是要报错
+        //使用缓存会导致表情载入变慢
         //启动EmojiLoader
         EmojiLoader.instance().setup(MainActivity.this,new EmojiProcessor.EmojiTaskCallBack() {
             @Override

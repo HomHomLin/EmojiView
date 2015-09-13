@@ -4,8 +4,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 
 import com.lhh.emoji.beans.EmojiObject;
+import com.lhh.emoji.core.config.EmojiLoaderConfiguration;
 import com.lhh.emoji.core.loader.EmojiLoader;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -54,6 +56,7 @@ public class EmojiHandler implements BaseHandler {
 
     @Override
     public void startJson(String json) throws Exception{
+
         JSONObject obj = new JSONObject(json);
         if(obj.has(EmojiLoader.JSON_ITEMS)){
             JSONArray ja = obj.getJSONArray(EmojiLoader.JSON_ITEMS);
@@ -73,7 +76,7 @@ public class EmojiHandler implements BaseHandler {
                 mEmojiList.add(emojiObject);
                 //将对象放入map中，用于edittext的判断
                 mEmojiMap.put(emojiObject.getKey(), emojiObject.getPath());
-                if(EmojiLoader.instance().isUseCache) {
+                if(EmojiLoader.instance().getBuilder().getUseCache()) {
                     //解析图片,用于缓存
                     Bitmap bitmap = ImageLoader.getInstance().loadImageSync("file://" + emojiObject.getPath());
                     mEmojiDrawableMap.put(emojiObject.getKey(),

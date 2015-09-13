@@ -123,10 +123,10 @@ public class EmojiPager extends RelativeLayout{
             EmojiImageView iv = ViewHolder.get(view, R.id.emoji_image_view);
             if(iv != null){
                 if(!mExtraData.get(i).getPath().equals(EmojiLoader.BACKSPACE)) {
-                    if(EmojiLoader.instance().isUseCache && EmojiLoader.instance().mEmojiDrawableMap == null) {
+                    if(EmojiLoader.instance().getBuilder().getUseCache() && EmojiLoader.instance().mEmojiDrawableMap == null) {
                         EmojiLoader.instance().mEmojiDrawableMap = new HashMap<>();
                     }
-                    if(EmojiLoader.instance().isUseCache && EmojiLoader.instance().mEmojiDrawableMap.containsKey(mExtraData.get(i).getKey())){
+                    if(EmojiLoader.instance().getBuilder().getUseCache() && EmojiLoader.instance().mEmojiDrawableMap.containsKey(mExtraData.get(i).getKey())){
                         //如果存在这个缓存
                         iv.setImageDrawable(EmojiLoader.instance().getEmojiDrawableMap().get(mExtraData.get(i).getKey()));
                     }else{

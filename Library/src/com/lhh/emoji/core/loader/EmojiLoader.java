@@ -6,6 +6,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.text.Spannable;
+import android.text.TextUtils;
 import android.text.style.ImageSpan;
 import android.util.Log;
 import android.util.SparseArray;
@@ -14,6 +15,7 @@ import android.view.KeyEvent;
 import android.widget.EditText;
 
 import com.lhh.emoji.beans.EmojiObject;
+import com.lhh.emoji.core.config.EmojiLoaderConfiguration;
 import com.lhh.emoji.core.processor.EmojiProcessor;
 import com.lhh.emoji.util.EmojiUtils;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -53,15 +55,15 @@ public class EmojiLoader {
 
     private EmojiProcessor mParserTask = null;
 
-    public static final  boolean isUseCache = true;
+//    public static final  boolean isUseCache = true;
 
     private boolean mEmojiMode;
 
 
     private static final String MATCHER = "\\[\\w*\\]";
 
-    // 每个表情包都含有emoji.xml的文件索引
-    private static final String EMOJI_JSON_NAME = "emoji.json";
+//    // 每个表情包都含有emoji.xml的文件索引
+//    private static final String EMOJI_JSON_NAME = "emoji.json";
 
     // 回退标识
     public static final String BACKSPACE = "backspace";
@@ -69,12 +71,12 @@ public class EmojiLoader {
     //删除对象
     public EmojiObject mBackspaceEmojiObject;
 
-    public static final String EXT_SDCARD_PATH = Environment.getExternalStorageDirectory().getAbsolutePath();
-    public static final String APP_DATA_PATH = EXT_SDCARD_PATH + "/emojiview/";
-
-    // 表情包顶级目录名称
-    public static final String EMOJI_PATH = APP_DATA_PATH
-            + "emoji";
+//    public static final String EXT_SDCARD_PATH = Environment.getExternalStorageDirectory().getAbsolutePath();
+//    public static final String APP_DATA_PATH = EXT_SDCARD_PATH + "/emojiview/";
+//
+//    // 表情包顶级目录名称
+//    public static final String EMOJI_PATH = APP_DATA_PATH
+//            + "emoji";
 
     // 基础表情包目录名称
     public static final String BASE_EMOJI_DIR = "1";
@@ -84,6 +86,8 @@ public class EmojiLoader {
     public static final String BASE_EMOJI_ZIP_NAME_2 = "2.zip";
 
     private static final String TAG = "EmojiManager";
+
+    private EmojiLoaderConfiguration.Builder mBuilder;
 
     private Context mContext;
 
@@ -169,6 +173,14 @@ public class EmojiLoader {
             }
         }
         return mInstance;
+    }
+
+    public void init(EmojiLoaderConfiguration.Builder builder){
+        this.mBuilder = builder;
+    }
+
+    public EmojiLoaderConfiguration.Builder getBuilder(){
+        return this.mBuilder;
     }
 
     public EmojiObject getBackspaceEmojiObject(){
@@ -322,7 +334,7 @@ public class EmojiLoader {
         Matcher matcher = Pattern.compile(MATCHER).matcher(spannable);
         while (matcher.find()) {
             Drawable drawable = null;
-            if (isUseCache && mEmojiDrawableMap != null && mEmojiDrawableMap.containsKey(matcher.group())) {
+            if (EmojiLoader.instance().getBuilder().getUseCache() && mEmojiDrawableMap != null && mEmojiDrawableMap.containsKey(matcher.group())) {
                 //如果使用缓存，使用缓存
                 drawable = mEmojiDrawableMap.get(matcher.group());
             }else{
@@ -362,7 +374,7 @@ public class EmojiLoader {
 //        Bitmap bmp = BitmapFactory.decodeFile(path);
         if (bmp != null) {
             drawable = new BitmapDrawable(context.getResources(), bmp);
-            if(isUseCache && !mEmojiDrawableMap.containsKey(key)){
+            if(EmojiLoader.instance().getBuilder().getUseCache() && !mEmojiDrawableMap.containsKey(key)){
                 mEmojiDrawableMap.put(key,drawable);//保存缓存下
             }
         } else {
@@ -449,6 +461,7 @@ public class EmojiLoader {
      * @return
      */
     public static SparseArray<String> getAllEmojiJsons(String path) {
+
         SparseArray<String> jsonArray = null;
         File dir = new File(path);
         if (dir != null && dir.isDirectory()) {
@@ -462,7 +475,7 @@ public class EmojiLoader {
                     File[] childFiles = fp.listFiles();
                     for (File fc : childFiles) {
                         if (fc != null && fc.exists()) {
-                            if (fc.getName().equals(EMOJI_JSON_NAME)) {
+                            if (fc.getName().equals(EmojiLoader.instance().getBuilder().getConfigFile())) {
                                 jsonArray.put(EmojiUtils.parseInt(fp.getName()),
                                         path + File.separator + fp.getName()
                                                 + File.separator + fc.getName());
